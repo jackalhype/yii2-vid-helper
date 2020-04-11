@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+    'layout' => 'site',
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
@@ -15,15 +16,17 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            'baseUrl' => '/admin',      # very important line if DocumentRoot on backend/web/../../
         ],
         'user' => [
+            'class' => 'backend\components\User',
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
         'session' => [
             // this is the name of the session cookie used for login on the backend
-            'name' => 'advanced-backend',
+            'name' => 'backendsess',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -37,14 +40,17 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '' => 'main/index',
+                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
+                '<controller:\w+>/' => '<controller>/index',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];

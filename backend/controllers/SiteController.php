@@ -8,10 +8,12 @@ use yii\filters\AccessControl;
 use common\models\LoginForm;
 
 /**
- * Site controller
+ * Site controller, (before logged in or so)
  */
 class SiteController extends Controller
 {
+    public $layout = 'main';
+
     /**
      * {@inheritdoc}
      */
@@ -35,7 +37,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'logout' => ['get', 'post'],
                 ],
             ],
         ];
@@ -54,9 +56,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
+     * default admin page
      */
     public function actionIndex()
     {
