@@ -18,11 +18,11 @@ class Menu
                     ],
                     [
                         'title' => 'Первое',
-                        'href' => '/admin/video/1',
+                        'href' => '/admin/video/edit/1',
                     ],
                     [
                         'title' => 'Второе',
-                        'href' => '/admin/video/2',
+                        'href' => '/admin/video/edit/2',
                     ],
                 ]
             ],

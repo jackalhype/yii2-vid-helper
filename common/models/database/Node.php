@@ -14,8 +14,9 @@ class Node extends AppActiveRecord
 
     public static function getFull($params=[]) {
         $id = isset($params['id']) ? $params['id'] : null;
+        $res = [];
         if (!$id) {
-            return [];
+            return $res;
         }
 
         $rows = static::find()
@@ -55,7 +56,35 @@ class Node extends AppActiveRecord
                 'n1.sort' => SORT_ASC,
             ])->asArray()->all();
 
-        return $rows;
+        $n = -1;
+        foreach ($rows as $r) {
+            $n++;
+            $parent = null;
+            if (!empty($r['parent_id'])) {
+                if (isset($r['parent6_id'])) {
+                    $parent =& $res[$r['parent6_id']][$r['parent5_id']][$r['parent4_id']][$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                } else if (isset($r['parent5_id'])) {
+                    $parent =& $res[$r['parent5_id']][$r['parent4_id']][$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                } else if (isset($r['parent4_id'])) {
+                    $parent =& $res[$r['parent4_id']][$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                } else if (isset($r['parent3_id'])) {
+                    $parent =& $res[$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                } else if (isset($r['parent2_id'])) {
+                    $parent =& $res[$r['parent2_id']][$r['parent_id']];
+                } else if (isset($r['parent_id'])) {
+                    $parent =& $res[$r['parent_id']];
+                } else if (isset($r['node_id'])) {
+                    $res[$r['node_id']] = $r;
+                    continue;
+                }
+                if (!isset($parent['nested'])) {
+                    $parent['nested'] = [];
+                }
+                $parent['nested'][] = $r;
+            }
+        }
+
+        return $res;
     }
 
 

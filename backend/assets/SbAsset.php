@@ -10,6 +10,7 @@ class SbAsset extends AssetBundle
     public $css = [
         'css/sb-admin-2.css',
         'css/metisMenu.min.css',
+        'css/fontawesome/v5.9.0/css/all.css',
         'js/jquery-ui-1.12.1/jquery-ui.min.css',
         'js/datetimepicker-2.3.7/build/jquery.datetimepicker.min.css',
     ];
