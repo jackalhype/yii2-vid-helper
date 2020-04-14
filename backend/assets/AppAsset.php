@@ -23,6 +23,5 @@ class AppAsset extends AssetBundle
         'backend\assets\SbAsset',
         'backend\assets\DatatablesAsset',
         'backend\assets\BootstrapSelect',
-        '\rmrevin\yii\fontawesome\AssetBundle',
     ];
 }
