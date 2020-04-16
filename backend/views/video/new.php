@@ -4,32 +4,20 @@
 
 <h1>Новое видео</h1>
 <div class="form-controls">
-    <form>
+    <form id="video-form">
         <input type="hidden" name="node_id" value="" />
         <div class="row">
             <button type="button" class="btn btn-success" id="save-btn">Сохранить</button>
-            <button type="button" class="btn btn-default" id="submit-tree-btn">Обновить</button>
+            <button type="reset" class="btn btn-default" id="refresh-btn">Очистить</button>
+            <button type="reset" class="btn btn-warning" id="delete-btn">Удалить</button>
         </div>
         <br>
         <div class="row">
-            <textarea id="tree-editor" name="tree-editor" class="form-control" autocomplete="off"></textarea>
-            <!--<textarea class="ckeditor" cols="120" id="tree-editor" name="tree-editor" rows="10"></textarea>-->
+            <textarea id="tree-editor" name="tree" class="form-control" autocomplete="off"></textarea>
+            <!--<textarea class="ckeditor" cols="120" id="tree-editor" name="tree" rows="15"></textarea>-->
         </div>
     </form>
 </div>
-
-<template id="node-tpl">
-    <div class="node-wrap">
-        <div class="row">
-            <div class="md-col-9" >
-                <input type="text" name="title" value="" autocomplete="off" />
-            </div>
-            <div class="md-col-1" >
-                <input type="checkbox" name="status" value="" />
-            </div>
-        </div>
-    </div>
-</template>
 
 <style>
     .cke-btn {

@@ -6,7 +6,51 @@ Video = {
 
     init: function() {
         const _this = this;
-        console.log('Video.init()');
+
+        _this.initCKEditor();
+
+        // save btn:
+        $('#save-btn').on('click', function(ev) {
+            let node_id = $('#node_id').val();
+            let tree = CKEDITOR.instances['tree-editor'].getData();
+            let data = {
+                'node_id': node_id,
+                'tree': tree
+            };
+            $.post('/admin/video/save', data)
+                .done((resp) => {
+                    if (!resp.success) {
+                        alert(resp.error);
+                        return;
+                    }
+                });
+        });
+
+        // refresh btn:
+        $('#refresh-btn').on('click', function(ev){
+            CKEDITOR.instances['tree-editor'].setData('');
+        });
+
+        // delete btn:
+        $('#delete-btn').on('click', function(ev){
+            let node_id = $('[name="node_id"]').val();
+            if (!node_id) {
+                return;
+            }
+            $.post('/admin/video/delete/' + node_id, {})
+                .done((resp) => {
+                    if (!resp.success) {
+                        alert(resp.error);
+                        return;
+                    }
+                    window.location = '/admin/video/new';
+                })
+        });
+
+    },
+
+    initCKEditor: function() {
+        const _this = this;
 
         _this.tree_editor = CKEDITOR.replace( 'tree-editor', { tabSpaces: _this.tab_spaces  } );
         _this.tree_editor.on( 'change', function( ev ) {
@@ -38,7 +82,6 @@ Video = {
         });
 
         _this.addFormatLiBtn();
-
     },
 
     addFormatLiBtn: function() {

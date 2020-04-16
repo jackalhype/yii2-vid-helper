@@ -88,4 +88,54 @@ class Node extends AppActiveRecord
     }
 
 
+    public function saveTree($params) {
+        $id = $this->id;
+        $html_tree = isset($params['html_tree']) ? $params['html_tree'] : null;
+        // TODO: delete old, replace with new
+
+        $doc = new \DOMDocument();
+        $doc->loadHTML('<?xml encoding="utf-8" ?>' . $html_tree);
+        $full_html = $doc->saveHTML();
+        $xpath = new \DOMXPath($doc);
+        $body = $xpath->query('//body')->item(0);
+        $elems = $xpath->query("//body/*");
+        echo '<pre>';
+        $this->traverse($elems, $xpath, &$node_tree);
+        foreach($elems as $el) {
+//            if ($el->hasChildNodes()) {
+//                $childNodes = $el->childNodes;
+//                foreach($childNodes as $ch) {
+//                    self::msg($ch);
+//                }
+//            }
+            $olul = strtolower($el->tagName);
+            $lis = $xpath->query('./li', $el);
+            foreach($lis as $li) {
+//                self::msg($li);
+                $txt_nodes = $xpath->query('./text()', $li);
+                $ols = $xpath->query('./'.$olul, $li);
+                # $imgs = $xpath->query('./img', $li);
+                foreach($txt_nodes as $tn) {
+                    $txt = $tn->nodeValue;
+                    self::msg($txt);
+                }
+                $this->traverse($ols, $xpath);
+            }
+
+        }
+
+
+        return [ 'success' => true ];
+    }
+
+    protected function traverse($oluls, $xpath, &$node_tree) {
+
+    }
+
+    protected static function msg($val) {
+        print_r($val);
+        echo "\n";
+    }
+
+
 }
