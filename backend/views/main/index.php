@@ -8,7 +8,7 @@ $this->title = 'Admin';
 ?>
 <div class="site-index">
     <div class="jumbotron">
-        <h1>Привет, <?=User::findIdentity(\Yii::$app->user->getId())->username?>!</h1>
+        <h1>Админский Дэшборд</h1>
     </div>
     <div class="body-content">
         <?php if(\Yii::$app->user->admin === 1):?>

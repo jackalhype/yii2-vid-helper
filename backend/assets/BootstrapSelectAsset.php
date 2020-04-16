@@ -2,7 +2,7 @@
 namespace backend\assets;
 use yii\web\AssetBundle;
 
-class BootstrapSelect extends AssetBundle
+class BootstrapSelectAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';

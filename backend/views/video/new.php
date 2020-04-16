@@ -1,5 +1,7 @@
 <?php
+    $this->registerJsFile('@web/js/main/video.js', ['depends' => 'backend\assets\AppAsset']);
 ?>
+
 <h1>Новое видео</h1>
 <div class="form-controls">
     <form>
@@ -10,7 +12,8 @@
         </div>
         <br>
         <div class="row">
-            <textarea name="tree" class="form-control" autocomplete="off"></textarea>
+            <textarea id="tree-editor" name="tree-editor" class="form-control" autocomplete="off"></textarea>
+            <!--<textarea class="ckeditor" cols="120" id="tree-editor" name="tree-editor" rows="10"></textarea>-->
         </div>
     </form>
 </div>
@@ -27,3 +30,12 @@
         </div>
     </div>
 </template>
+
+<style>
+    .cke-btn {
+        padding: 5px;
+    }
+    .cke-btn:hover {
+        background-color: #c7c7c7;
+    }
+</style>

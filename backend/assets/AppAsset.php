@@ -22,6 +22,7 @@ class AppAsset extends AssetBundle
         'yii\bootstrap\BootstrapPluginAsset',
         'backend\assets\SbAsset',
         'backend\assets\DatatablesAsset',
-        'backend\assets\BootstrapSelect',
+        'backend\assets\BootstrapSelectAsset',
+        '\mihaildev\ckeditor\Assets',
     ];
 }
