@@ -109,7 +109,7 @@ class Node extends AppActiveRecord
                 $this->sort : null;
         if (!$sort) {
             $last_sort = self::find()->select('sort')->where(['parent_id' => $parent_id])->orderBy(['sort' => SORT_DESC])
-                ->limit(1)->column();
+                ->limit(1)->scalar();
             $sort = intval($last_sort) + 10;
         }
 
@@ -126,6 +126,7 @@ class Node extends AppActiveRecord
                 $ch->delete();      // cascade
             }
         }
+
         $id = $this->saveNodeTree($root_node['nested'], $root_node['id'], $sort);
 
         return [ 'success' => true, 'node_id' => $id ];
@@ -177,9 +178,11 @@ class Node extends AppActiveRecord
      * @param int $parent_id
      * @throws \Exception
      */
-    public function saveNodeTree($node_tree, $parent_id = 1) {
+    public function saveNodeTree($node_tree, $parent_id = 1, $sort = null) {
         foreach ($node_tree as $k => $node) {
-            $sort = ($k+1) * 10;
+            if (!$sort) {
+                $sort = ($k + 1) * 10;
+            }
             $id = isset($node['id']) ? $node['id'] : null;
             if ($id) {
                 $model = self::findOne(['id' => $id]);
