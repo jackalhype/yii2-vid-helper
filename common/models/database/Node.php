@@ -56,31 +56,29 @@ class Node extends AppActiveRecord
                 'n1.sort' => SORT_ASC,
             ])->asArray()->all();
 
+//        print_r($rows); die;
+
         $n = -1;
         foreach ($rows as $r) {
             $n++;
             $parent = null;
-            if (!empty($r['parent_id'])) {
+            if (!empty($r['node_id'])) {
                 if (isset($r['parent6_id'])) {
-                    $parent =& $res[$r['parent6_id']][$r['parent5_id']][$r['parent4_id']][$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                    $res[$r['parent6_id']]['nested'][$r['parent5_id']]['nested'][$r['parent4_id']]['nested'][$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['parent5_id'])) {
-                    $parent =& $res[$r['parent5_id']][$r['parent4_id']][$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                    $res[$r['parent5_id']]['nested'][$r['parent4_id']]['nested'][$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['parent4_id'])) {
-                    $parent =& $res[$r['parent4_id']][$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                    $res[$r['parent4_id']]['nested'][$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['parent3_id'])) {
-                    $parent =& $res[$r['parent3_id']][$r['parent2_id']][$r['parent_id']];
+                    $res[$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['parent2_id'])) {
-                    $parent =& $res[$r['parent2_id']][$r['parent_id']];
+                    $res[$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['parent_id'])) {
-                    $parent =& $res[$r['parent_id']];
+                    $res[$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['node_id'])) {
                     $res[$r['node_id']] = $r;
                     continue;
                 }
-                if (!isset($parent['nested'])) {
-                    $parent['nested'] = [];
-                }
-                $parent['nested'][] = $r;
             }
         }
 
@@ -120,6 +118,7 @@ class Node extends AppActiveRecord
         $body = $xpath->query('//body')->item(0);
         $elems = $xpath->query("//body/*");
         $this->traverseDom($elems, $xpath, $root_node, 1, $id);
+
         if ($id) {
             $children = self::find()->where(['parent_id' => $id])->all();
             foreach ($children as $ch) {
@@ -178,11 +177,9 @@ class Node extends AppActiveRecord
      * @param int $parent_id
      * @throws \Exception
      */
-    public function saveNodeTree($node_tree, $parent_id = 1, $sort = null) {
+    public function saveNodeTree($node_tree, $parent_id = 1, $sort_expl = null) {
         foreach ($node_tree as $k => $node) {
-            if (!$sort) {
-                $sort = ($k + 1) * 10;
-            }
+            $sort = $sort_expl ? $sort_expl : ($k + 1) * 10;
             $id = isset($node['id']) ? $node['id'] : null;
             if ($id) {
                 $model = self::findOne(['id' => $id]);
