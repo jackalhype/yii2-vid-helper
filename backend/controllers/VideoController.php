@@ -29,7 +29,8 @@ class VideoController  extends AppController
     }
 
     // edit page
-    public function actionEdit($id) {
+    public function actionEdit() {
+        $id = $post = \Yii::$app->request->get('id');
         die($id);
         $data = [];
         return $this->render('index', $data);

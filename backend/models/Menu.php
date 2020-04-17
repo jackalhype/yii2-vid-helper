@@ -27,7 +27,7 @@ class Menu
                     $menu_items[] = [
                         'title' => $title,
                         'title_short' => mb_substr($title, 0, 80),
-                        'href' => '/admin/video/edit/' . $id,
+                        'href' => '/admin/video/edit?id='.$id,
                     ];
                 }
             }
