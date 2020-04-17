@@ -27,8 +27,10 @@ CREATE TABLE IF NOT EXISTS `node` (
 )
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
-;
+        ")->execute();
 
+        $this->db->createCommand("
+        insert into `node` (id, title, status, sort) values (1, 'Video', 1, 1) 
         ")->execute();
     }
 
@@ -40,6 +42,7 @@ ENGINE=InnoDB
         echo "m200411_161441_node_table cannot be reverted.\n";
 
         return false;
+//        return true;
     }
 
     /*
