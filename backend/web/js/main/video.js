@@ -23,6 +23,7 @@ Video = {
                         alert(resp.error);
                         return;
                     }
+                    $('#node_id').val(resp.node_id);
                 });
         });
 

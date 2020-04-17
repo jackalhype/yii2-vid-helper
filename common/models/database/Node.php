@@ -88,10 +88,30 @@ class Node extends AppActiveRecord
     }
 
 
-    public function saveTree($params) {
+    /**
+     * Save node tree from html ol/ul-li representation
+     * @param $params
+     * @return array
+     */
+    public function saveHtmlTree($params) {
         $id = $this->id;
         $html_tree = isset($params['html_tree']) ? $params['html_tree'] : null;
         // TODO: delete old, replace with new
+        $parent_id = isset($params['parent_id']) ?
+            $params['parent_id'] : !empty($this->parent_id) ?
+                $this->parent_id : 1;
+        $root_node = self::find()->where(['id' => $parent_id])->asArray()->one();
+        if (!$root_node) {
+            return [ 'success' => false, 'error' => "root node not found (id=$parent_id)" ];
+        }
+        $sort = isset($params['sort']) ?
+            $params['sort'] : !empty($this->sort) ?
+                $this->sort : null;
+        if (!$sort) {
+            $last_sort = self::find()->select('sort')->where(['parent_id' => $parent_id])->orderBy(['sort' => SORT_DESC])
+                ->limit(1)->column();
+            $sort = intval($last_sort) + 10;
+        }
 
         $doc = new \DOMDocument();
         $doc->loadHTML('<?xml encoding="utf-8" ?>' . $html_tree);
@@ -99,38 +119,91 @@ class Node extends AppActiveRecord
         $xpath = new \DOMXPath($doc);
         $body = $xpath->query('//body')->item(0);
         $elems = $xpath->query("//body/*");
-        echo '<pre>';
-        $this->traverse($elems, $xpath, &$node_tree);
-        foreach($elems as $el) {
-//            if ($el->hasChildNodes()) {
-//                $childNodes = $el->childNodes;
-//                foreach($childNodes as $ch) {
-//                    self::msg($ch);
-//                }
-//            }
+        $this->traverseDom($elems, $xpath, $root_node, 1, $id);
+        if ($id) {
+            $children = self::find()->where(['parent_id' => $id])->all();
+            foreach ($children as $ch) {
+                $ch->delete();      // cascade
+            }
+        }
+        $id = $this->saveNodeTree($root_node['nested'], $root_node['id'], $sort);
+
+        return [ 'success' => true, 'node_id' => $id ];
+    }
+
+    protected function traverseDom($oluls, $xpath, &$parent_node, $limit = null, $id = null) {
+        $cou = 0;
+        foreach($oluls as $el) {
+            $cou +=1;
             $olul = strtolower($el->tagName);
             $lis = $xpath->query('./li', $el);
+            $cl = -1;
             foreach($lis as $li) {
-//                self::msg($li);
+                $cl +=1;
                 $txt_nodes = $xpath->query('./text()', $li);
                 $ols = $xpath->query('./'.$olul, $li);
                 # $imgs = $xpath->query('./img', $li);
+                $title = '';
                 foreach($txt_nodes as $tn) {
-                    $txt = $tn->nodeValue;
-                    self::msg($txt);
+                    $txt = trim($tn->nodeValue);
+                    $title .= $txt;
                 }
-                $this->traverse($ols, $xpath);
+                $item = [
+                    'title' => $title,
+                    'descr' => '',
+                ];
+                if ($id) {
+                    $item['id'] = $id;
+                }
+                if (!isset($parent_node['nested'])) {
+                    $parent_node['nested'] = [];
+                }
+                $parent_node['nested'][$cl] = $item;
+
+                if (count($ols)) {
+                    $this->traverseDom($ols, $xpath, $parent_node['nested'][$cl]);
+                }
             }
-
+            if ($limit) {
+                if ($cou >= $limit) {
+                    break;
+                }
+            }
         }
-
-
-        return [ 'success' => true ];
     }
 
-    protected function traverse($oluls, $xpath, &$node_tree) {
-
+    /**
+     * @param $node_tree array
+     * @param int $parent_id
+     * @throws \Exception
+     */
+    public function saveNodeTree($node_tree, $parent_id = 1) {
+        foreach ($node_tree as $k => $node) {
+            $sort = ($k+1) * 10;
+            $id = isset($node['id']) ? $node['id'] : null;
+            if ($id) {
+                $model = self::findOne(['id' => $id]);
+            } else {
+                $model = new self();
+            }
+            if (!isset($node['title'])) {
+                throw new \Exception('Node::saveNodeTree() null title');
+            }
+            $model->title = isset($node['title']) ? $node['title'] : null;
+            $model->descr = isset($node['descr']) ? $node['descr'] : '';
+            $model->sort = $sort;
+            $model->status = 1;
+            $model->parent_id = $parent_id;
+            if (!$model->save()) {
+                throw new \Exception("Unable to save Node");
+            }
+            if (isset($node['nested'])) {
+                $this->saveNodeTree($node['nested'], $model->id);
+            }
+        }
+        return $model->id;
     }
+
 
     protected static function msg($val) {
         print_r($val);

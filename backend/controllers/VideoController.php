@@ -50,7 +50,7 @@ class VideoController  extends AppController
             return $this->asJson([ 'succes' => false, 'error' => "node problems"]);
         }
 
-        $res = $node->saveTree([ 'html_tree' => $tree]);
+        $res = $node->saveHtmlTree([ 'html_tree' => $tree]);
         return $this->asJson($res);
     }
 

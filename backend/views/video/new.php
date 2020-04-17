@@ -5,7 +5,7 @@
 <h1>Новое видео</h1>
 <div class="form-controls">
     <form id="video-form">
-        <input type="hidden" name="node_id" value="" />
+        <input type="hidden" name="node_id" id="node_id" value="" />
         <div class="row">
             <button type="button" class="btn btn-success" id="save-btn">Сохранить</button>
             <button type="reset" class="btn btn-default" id="refresh-btn">Очистить</button>
