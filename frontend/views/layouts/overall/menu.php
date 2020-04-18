@@ -22,46 +22,42 @@
 </div>
 
 <style>
-    .header-menu-wrap {
-        height: 90px;
-        background-color: #323232;
-    }
+.header-menu-wrap {
+    height: 90px;
+    background-color: #323232;
+}
 
-    .header-menu-wrap .menu-ul {
-        float: right;
-        padding: 16px 50px 2px 6px;
-        color: #33FE30;
-        font-size: 1.5em;
-        display: inline-block;
-        width: 290px;
+.header-menu-wrap .menu-ul {
+    float: right;
+    padding: 16px 50px 2px 6px;
+    color: #33FE30;
+    font-size: 1.5em;
+    display: inline-block;
+    width: 290px;
+}
 
-    }
+.header-menu-wrap .menu-ul a {
+    color: #33FE30;
+}
 
-    .header-menu-wrap .menu-ul a {
-        color: #33FE30;
-    }
+.header-menu-wrap .menu-ul > li {
 
+}
 
-    .header-menu-wrap .menu-ul > li {
+.nav-second-level {
+    margin-top: 6px;
+    width: 290px;
+    border-radius: 5px;
+}
 
-    }
-    .nav-second-level {
-        margin-top: 6px;
-        width: 290px;
-        border-radius: 5px;
-    }
+.nav-second-level li {
+    font-size: 0.8em;
+    background-color: #464646;
+    border-radius: 5px;
+}
 
-    .nav-second-level li {
-        font-size: 0.8em;
-        background-color: #464646;
-        border-radius: 5px;
-    }
-
-    .nav-second-level li a {
-        border-radius: 5px;
-    }
-
-
-
+.nav-second-level li a {
+    border-radius: 5px;
+}
 
 </style>
