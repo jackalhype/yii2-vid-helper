@@ -11,7 +11,21 @@ $this->registerJsFile('@web/js/main/video.js', ['depends' => 'frontend\assets\Ap
     <?= $video_html ?>
 </div>
 
+<div class="tip" id="tip"></div>
+
 <style>
+    .tip {
+        position: fixed;
+        top: 0;
+        right: 0;
+        min-width: 30px;
+        max-width: 50px;
+        height: 35px;
+        background-color: #050509;
+        color: #e83232;
+        padding: 6px;
+    }
+
     .video-wrap {
         font-size: 1.2em;
     }
