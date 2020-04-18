@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+    'layout' => 'layout1',
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
