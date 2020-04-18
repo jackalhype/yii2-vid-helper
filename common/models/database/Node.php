@@ -14,6 +14,7 @@ class Node extends AppActiveRecord
 
     public static function getFull($params=[]) {
         $id = isset($params['id']) ? $params['id'] : null;
+        $debug = (isset($params['debug']) && $params['debug']);
         $res = [];
         if (!$id) {
             return $res;
@@ -56,24 +57,52 @@ class Node extends AppActiveRecord
                 'n1.sort' => SORT_ASC,
             ])->asArray()->all();
 
-//        print_r($rows); die;
+        if ($debug) {
+//            print_r($rows); die;
+        }
+
+        $blacklist_ids = [];
+        foreach($rows as $r) { // making blacklist with the first record's parents:
+            if (isset($r['parent_id'])) {
+                $blacklist_ids[$r['parent_id']] = 1;
+                if (isset($r['parent2_id'])) {
+                    $blacklist_ids[$r['parent2_id']] = 1;
+                    if (isset($r['parent3_id'])) {
+                        $blacklist_ids[$r['parent3_id']] = 1;
+                        if (isset($r['parent4_id'])) {
+                            $blacklist_ids[$r['parent4_id']] = 1;
+                            if (isset($r['parent5_id'])) {
+                                $blacklist_ids[$r['parent5_id']] = 1;
+                                if (isset($r['parent6_id'])) {
+                                    $blacklist_ids[$r['parent6_id']] = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            break;
+        }
 
         $n = -1;
         foreach ($rows as $r) {
             $n++;
+            if ($debug) {
+                self::msg($n);
+            }
             $parent = null;
             if (!empty($r['node_id'])) {
-                if (isset($r['parent6_id'])) {
+                if (isset($r['parent6_id']) && !isset($blacklist_ids[$r['parent6_id']])) {
                     $res[$r['parent6_id']]['nested'][$r['parent5_id']]['nested'][$r['parent4_id']]['nested'][$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
-                } else if (isset($r['parent5_id'])) {
+                } else if (isset($r['parent5_id']) && !isset($blacklist_ids[$r['parent5_id']])) {
                     $res[$r['parent5_id']]['nested'][$r['parent4_id']]['nested'][$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
-                } else if (isset($r['parent4_id'])) {
+                } else if (isset($r['parent4_id']) && !isset($blacklist_ids[$r['parent4_id']])) {
                     $res[$r['parent4_id']]['nested'][$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
-                } else if (isset($r['parent3_id'])) {
+                } else if (isset($r['parent3_id']) && !isset($blacklist_ids[$r['parent3_id']])) {
                     $res[$r['parent3_id']]['nested'][$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
-                } else if (isset($r['parent2_id'])) {
+                } else if (isset($r['parent2_id']) && !isset($blacklist_ids[$r['parent2_id']])) {
                     $res[$r['parent2_id']]['nested'][$r['parent_id']]['nested'][$r['node_id']] = $r;
-                } else if (isset($r['parent_id'])) {
+                } else if (isset($r['parent_id']) && !isset($blacklist_ids[$r['parent_id']])) {
                     $res[$r['parent_id']]['nested'][$r['node_id']] = $r;
                 } else if (isset($r['node_id'])) {
                     $res[$r['node_id']] = $r;

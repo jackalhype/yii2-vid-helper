@@ -24,6 +24,9 @@ Video = {
                         return;
                     }
                     $('#node_id').val(resp.node_id);
+                    if (resp.node_id) {
+                        window.location.href = '/admin/video/edit?id='+resp.node_id;
+                    }
                 });
         });
 
