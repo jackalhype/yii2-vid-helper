@@ -37,9 +37,10 @@ class VideoController  extends AppController
 //            'debug' => true,
         ]);
         $video_node = current($video);
+        $video_html = Node::makeAdminHtmlTree($video);
         $data = [
-            'video' => $video,
             'video_node' => $video_node,
+            'video_html' => $video_html,
         ];
         return $this->render('edit', $data);
     }
@@ -66,19 +67,19 @@ class VideoController  extends AppController
     // do delete
     public function actionDelete($id) {
         if (!$id) {
-            return $this->asJson([ 'succes' => false, 'error' => 'node_id not set']);
+            return $this->asJson([ 'success' => false, 'error' => 'id not set']);
         }
 
-        $node = Node::findOne(['id' => node_id]);
+        $node = Node::findOne(['id' => $id]);
         if (!$node) {
-            return $this->asJson([ 'succes' => false, 'error' => "node (id={$node_id}) not found"]);
+            return $this->asJson([ 'success' => false, 'error' => "node (id={$id}) not found"]);
         }
         $n = $node->delete();
         if (false === $n) {
-            return $this->asJson([ 'succes' => false, 'error' => "deletion failed"]);
+            return $this->asJson([ 'success' => false, 'error' => "deletion failed"]);
         }
 
-        return $this->asJson([ 'succes' => true ]);
+        return $this->asJson([ 'success' => true ]);
     }
 
 

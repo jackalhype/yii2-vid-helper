@@ -41,13 +41,13 @@ Video = {
             if (!node_id) {
                 return;
             }
-            $.post('/admin/video/delete/' + node_id, {})
+            $.post('/admin/video/delete?id=' + node_id, {})
                 .done((resp) => {
                     if (!resp.success) {
                         alert(resp.error);
                         return;
                     }
-                    window.location = '/admin/video/new';
+                    window.location.href = '/admin/video/new';
                 })
         });
 

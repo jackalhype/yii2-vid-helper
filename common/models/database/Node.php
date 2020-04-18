@@ -233,6 +233,39 @@ class Node extends AppActiveRecord
         return $model->id;
     }
 
+    /**
+     * make html for ckeditor in admin panel
+     * @param $array_tree
+     */
+    public static function makeAdminHtmlTree($array_tree) {
+//        $doc = new \DOMDocument('1.0', 'utf-8');
+        $dom = new \DOMDocument();
+        $xpath = new \DOMXPath($dom);
+        $root_node = current($array_tree);
+        $ol = $dom->createElement('ol');
+        self::makingAdminHtmlTraverseArray($root_node, $ol, $dom);
+        $dom->appendChild($ol);
+        $html = $dom->saveHTML();
+//        var_dump($html); die;
+        return $html;
+    }
+
+    protected static function makingAdminHtmlTraverseArray($node, \DOMElement &$ol, \DOMDocument $dom) {
+        $title = $node['title'];
+        $li = $dom->createElement('li');
+        $txt = $dom->createTextNode($title);
+        $li->appendChild($txt);
+        if (isset($node['nested'])) {
+            $txt_nl = $dom->createTextNode("\n");
+            $li->appendChild($txt_nl);
+            $ol_nest = $dom->createElement('ol');
+            foreach($node['nested'] as $id2 => $node2) {
+                self::makingAdminHtmlTraverseArray($node2, $ol_nest, $dom);
+            }
+            $li->appendChild($ol_nest);
+        }
+        $ol->appendChild($li);
+    }
 
     protected static function msg($val) {
         print_r($val);

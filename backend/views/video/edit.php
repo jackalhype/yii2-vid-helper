@@ -5,7 +5,7 @@ $this->registerJsFile('@web/js/main/video.js', ['depends' => 'backend\assets\App
 <h1><?= $video_node['title']?></h1>
 <div class="form-controls">
     <form id="video-form">
-        <input type="hidden" name="node_id" id="node_id" value="" />
+        <input type="hidden" name="node_id" id="node_id" value="<?= $video_node['node_id']?>" />
         <div class="row">
             <button type="button" class="btn btn-success" id="save-btn">Сохранить</button>
             <button type="reset" class="btn btn-default" id="refresh-btn">Очистить</button>
@@ -13,7 +13,7 @@ $this->registerJsFile('@web/js/main/video.js', ['depends' => 'backend\assets\App
         </div>
         <br>
         <div class="row">
-            <textarea id="tree-editor" name="tree" class="form-control" autocomplete="off"></textarea>
+            <textarea id="tree-editor" name="tree" class="form-control" autocomplete="off"><?=$video_html?></textarea>
             <!--<textarea class="ckeditor" cols="120" id="tree-editor" name="tree" rows="15"></textarea>-->
         </div>
     </form>
