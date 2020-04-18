@@ -36,6 +36,9 @@ class VideoController  extends AppController
             'id' => $id,
 //            'debug' => true,
         ]);
+        if (count($video) === 0) {
+            throw new \yii\web\NotFoundHttpException(404);
+        }
         $video_node = current($video);
         $video_html = Node::makeAdminHtmlTree($video);
         $data = [
