@@ -19,11 +19,12 @@ $this->registerJsFile('@web/js/main/video.js', ['depends' => 'frontend\assets\Ap
         top: 0;
         right: 0;
         min-width: 30px;
-        max-width: 50px;
+        max-width: 60px;
         height: 35px;
         background-color: #050509;
         color: #e83232;
         padding: 6px;
+        font-size: 2.2em;
     }
 
     .video-wrap {
